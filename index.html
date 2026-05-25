@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>投資家思考クイズ</title>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8398161859137802"
+     crossorigin="anonymous"></script>
+
+<style>
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+  background:linear-gradient(135deg,#0f172a,#14532d);
+  color:#fff;
+}
+header{
+  text-align:center;
+  padding:28px 16px;
+  background:rgba(0,0,0,.35);
+}
+header h1{margin:0;font-size:30px}
+header p{opacity:.85}
+.wrap{max-width:900px;margin:auto;padding:18px}
+.card{
+  background:rgba(255,255,255,.1);
+  border:1px solid rgba(255,255,255,.18);
+  border-radius:22px;
+  padding:22px;
+  box-shadow:0 18px 40px rgba(0,0,0,.25);
+  backdrop-filter:blur(12px);
+}
+.status{
+  display:flex;
+  justify-content:space-between;
+  gap:10px;
+  margin-bottom:16px;
+  font-weight:bold;
+}
+.bar{
+  height:12px;
+  background:rgba(255,255,255,.18);
+  border-radius:999px;
+  overflow:hidden;
+  margin-bottom:20px;
+}
+.bar span{
+  display:block;
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#22c55e,#facc15);
+  transition:.3s;
+}
+.question{
+  font-size:22px;
+  font-weight:800;
+  line-height:1.5;
+  margin-bottom:18px;
+}
+.choices{
+  display:grid;
+  gap:12px;
+}
+button.choice{
+  width:100%;
+  border:none;
+  border-radius:16px;
+  padding:16px;
+  font-size:16px;
+  font-weight:700;
+  cursor:pointer;
+  background:#f8fafc;
+  color:#0f172a;
+  text-align:left;
+  transition:.2s;
+}
+button.choice:hover{
+  transform:translateY(-2px);
+  background:#dcfce7;
+}
+.result{
+  display:none;
+  text-align:center;
+}
+.result h2{font-size:28px}
+.score{
+  font-size:48px;
+  font-weight:900;
+  color:#facc15;
+}
+.comment{
+  background:rgba(255,255,255,.12);
+  padding:18px;
+  border-radius:18px;
+  line-height:1.8;
+  margin-top:16px;
+}
+.restart{
+  margin-top:20px;
+  padding:14px 24px;
+  border:none;
+  border-radius:999px;
+  background:#22c55e;
+  color:#fff;
+  font-weight:800;
+  cursor:pointer;
+}
+.ad{
+  margin:22px 0;
+  padding:10px;
+  background:rgba(255,255,255,.08);
+  border-radius:16px;
+}
+.small{opacity:.75;font-size:13px;margin-top:12px}
+</style>
+</head>
+
+<body>
+<header>
+  <h1>投資家思考クイズ</h1>
+  <p>あなたは短期目線？長期目線？投資家としての判断力をチェック！</p>
+</header>
+
+<div class="wrap">
+
+  <div class="ad">
+    <!-- UIゲーム -->
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-8398161859137802"
+         data-ad-slot="6325875393"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>
+         (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+
+  <div class="card" id="quizBox">
+    <div class="status">
+      <div id="count">1 / 20</div>
+      <div id="score">スコア 0</div>
+    </div>
+
+    <div class="bar"><span id="bar"></span></div>
+
+    <div class="question" id="question"></div>
+    <div class="choices" id="choices"></div>
+
+    <p class="small">※このクイズは投資判断の考え方を学ぶためのもので、特定銘柄の売買を推奨するものではありません。</p>
+  </div>
+
+  <div class="card result" id="resultBox">
+    <h2>診断結果</h2>
+    <div class="score" id="finalScore"></div>
+    <h3 id="rank"></h3>
+    <div class="comment" id="comment"></div>
+    <button class="restart" onclick="restartQuiz()">もう一度挑戦する</button>
+  </div>
+
+</div>
+
+<script>
+const questions = [
+  {
+    q:"株価が急落しました。まず考えるべきことは？",
+    choices:[
+      ["怖いので何も見ずに売る",0],
+      ["SNSでみんなの反応を見る",1],
+      ["急落理由と業績への影響を確認する",3],
+      ["もっと下がると決めつける",0]
+    ]
+  },
+  {
+    q:"長期投資で最も大切な考え方は？",
+    choices:[
+      ["毎日の値動きに一喜一憂する",0],
+      ["企業の成長性と継続性を見る",3],
+      ["流行っている銘柄だけ買う",1],
+      ["含み益が少し出たらすぐ売る",1]
+    ]
+  },
+  {
+    q:"高配当株を見るときに注意すべき点は？",
+    choices:[
+      ["配当利回りだけ見る",0],
+      ["株価が安いかだけ見る",1],
+      ["配当の持続性や利益水準を見る",3],
+      ["有名企業なら安心と考える",1]
+    ]
+  },
+  {
+    q:"PERが低い銘柄を見つけました。正しい考え方は？",
+    choices:[
+      ["必ず割安なので買う",0],
+      ["なぜ低いのか理由を調べる",3],
+      ["人気がないから避ける",1],
+      ["株価だけで判断する",0]
+    ]
+  },
+  {
+    q:"投資で損失を小さくするために重要なのは？",
+    choices:[
+      ["一銘柄に全力投資する",0],
+      ["損を取り返すために倍買う",0],
+      ["分散と資金管理を意識する",3],
+      ["値上がり銘柄を追いかけ続ける",1]
+    ]
+  },
+  {
+    q:"良い企業を判断する材料として適切なのは？",
+    choices:[
+      ["社名がかっこいい",0],
+      ["売上・利益・キャッシュフロー",3],
+      ["SNSで話題",1],
+      ["株主優待があるだけ",1]
+    ]
+  },
+  {
+    q:"市場全体が暴落している時の考え方は？",
+    choices:[
+      ["全て終わりだと考える",0],
+      ["優良企業を安く買う機会か検討する",3],
+      ["何でもいいから急いで買う",1],
+      ["ニュースを見ずに判断する",0]
+    ]
+  },
+  {
+    q:"投資初心者が避けたい行動は？",
+    choices:[
+      ["少額から始める",3],
+      ["余剰資金で投資する",3],
+      ["借金して一発勝負する",0],
+      ["投資理由をメモする",3]
+    ]
+  },
+  {
+    q:"決算発表で最も確認したいポイントは？",
+    choices:[
+      ["社長の顔写真",0],
+      ["売上・利益・今後の見通し",3],
+      ["株価掲示板の反応だけ",1],
+      ["配当だけ",1]
+    ]
+  },
+  {
+    q:"株価が上がった理由が分からない時は？",
+    choices:[
+      ["急いで飛び乗る",0],
+      ["材料や決算内容を確認する",3],
+      ["上がっているから安全と思う",1],
+      ["友達に聞くだけ",1]
+    ]
+  },
+  {
+    q:"投資で感情的になった時にすべきことは？",
+    choices:[
+      ["すぐ売買する",0],
+      ["一度冷静になり投資理由を見直す",3],
+      ["SNSに答えを求める",1],
+      ["負けを取り返すために集中投資する",0]
+    ]
+  },
+  {
+    q:"成長株を見る時に大切なのは？",
+    choices:[
+      ["株価が安いことだけ",1],
+      ["売上成長率や市場規模を見る",3],
+      ["配当が高いことだけ",1],
+      ["名前を聞いたことがあるか",0]
+    ]
+  },
+  {
+    q:"投資における『余剰資金』とは？",
+    choices:[
+      ["生活費として必要なお金",0],
+      ["借りたお金",0],
+      ["当面使う予定のないお金",3],
+      ["家賃に使うお金",0]
+    ]
+  },
+  {
+    q:"株価チャートを見る時の注意点は？",
+    choices:[
+      ["チャートだけで全て判断する",0],
+      ["業績や材料と合わせて見る",3],
+      ["上がっている線なら買う",1],
+      ["赤や緑の色だけ見る",0]
+    ]
+  },
+  {
+    q:"暴騰銘柄に出会った時の正しい姿勢は？",
+    choices:[
+      ["焦って全力買い",0],
+      ["上昇理由とリスクを確認する",3],
+      ["みんな買ってるから買う",1],
+      ["絶対にまだ上がると思う",0]
+    ]
+  },
+  {
+    q:"投資メモに残すと良い内容は？",
+    choices:[
+      ["買った理由・売る条件・リスク",3],
+      ["なんとなく買ったとだけ書く",0],
+      ["銘柄名だけ",1],
+      ["株価だけ",1]
+    ]
+  },
+  {
+    q:"決算が良いのに株価が下がりました。考えるべきことは？",
+    choices:[
+      ["決算が良いなら絶対上がるはず",0],
+      ["市場予想との比較や今後の見通しを見る",3],
+      ["すぐ損切りする",1],
+      ["株は完全に運だと考える",0]
+    ]
+  },
+  {
+    q:"分散投資の目的は？",
+    choices:[
+      ["利益を絶対保証するため",0],
+      ["リスクを一部に集中させないため",3],
+      ["銘柄数を増やして満足するため",1],
+      ["全部の株を買うため",0]
+    ]
+  },
+  {
+    q:"ニュースで有名人が銘柄を紹介しました。どうする？",
+    choices:[
+      ["すぐ同じ銘柄を買う",0],
+      ["自分で事業内容と業績を調べる",3],
+      ["有名人なら正しいと思う",1],
+      ["何も考えず信用する",0]
+    ]
+  },
+  {
+    q:"投資家として成長するために重要なのは？",
+    choices:[
+      ["失敗を記録して改善する",3],
+      ["失敗を忘れる",0],
+      ["勝った時だけ自慢する",1],
+      ["勉強せず勘で続ける",0]
+    ]
+  }
+];
+
+let current = 0;
+let score = 0;
+
+function showQuestion(){
+  const q = questions[current];
+  document.getElementById("count").textContent = `${current + 1} / ${questions.length}`;
+  document.getElementById("score").textContent = `スコア ${score}`;
+  document.getElementById("bar").style.width = `${(current / questions.length) * 100}%`;
+  document.getElementById("question").textContent = q.q;
+
+  const choicesBox = document.getElementById("choices");
+  choicesBox.innerHTML = "";
+
+  q.choices.forEach(choice => {
+    const btn = document.createElement("button");
+    btn.className = "choice";
+    btn.textContent = choice[0];
+    btn.onclick = () => {
+      score += choice[1];
+      current++;
+      if(current < questions.length){
+        setTimeout(showQuestion, 350);
+      }else{
+        showResult();
+      }
+    };
+    choicesBox.appendChild(btn);
+  });
+}
+
+function showResult(){
+  document.getElementById("quizBox").style.display = "none";
+  document.getElementById("resultBox").style.display = "block";
+  document.getElementById("bar").style.width = "100%";
+
+  const max = questions.length * 3;
+  const percent = Math.round((score / max) * 100);
+
+  document.getElementById("finalScore").textContent = `${percent}点`;
+
+  let rank = "";
+  let comment = "";
+
+  if(percent >= 85){
+    rank = "上級投資家思考タイプ";
+    comment = "企業分析・リスク管理・長期目線のバランスがかなり良いです。感情に流されず、根拠を持って判断できる投資家タイプです。";
+  }else if(percent >= 65){
+    rank = "堅実な成長投資家タイプ";
+    comment = "かなり良い投資家思考です。あとは決算・財務・市場環境をセットで見る習慣を増やすと、さらに判断力が上がります。";
+  }else if(percent >= 40){
+    rank = "これから伸びる投資家タイプ";
+    comment = "投資の基本はつかめていますが、まだ感情や話題性に流されやすい部分があります。買う前に『なぜ買うのか』を言語化しましょう。";
+  }else{
+    rank = "勢い投資注意タイプ";
+    comment = "流行や値動きだけで判断しやすい傾向があります。まずは少額・分散・余剰資金を守り、企業の数字を見る練習から始めるのがおすすめです。";
+  }
+
+  document.getElementById("rank").textContent = rank;
+  document.getElementById("comment").textContent = comment;
+}
+
+function restartQuiz(){
+  current = 0;
+  score = 0;
+  document.getElementById("quizBox").style.display = "block";
+  document.getElementById("resultBox").style.display = "none";
+  showQuestion();
+}
+
+showQuestion();
+</script>
+</body>
+</html>
